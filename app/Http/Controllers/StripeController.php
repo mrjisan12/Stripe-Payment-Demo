@@ -8,8 +8,11 @@ use Stripe\Checkout\Session;
 
 class StripeController extends Controller
 {
-    public function checkout()
+    public function checkout(Request $request)
     {
+        $amount = $request->amount; // in cents
+        $plan = $request->plan;
+
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
         $session = Session::create([
@@ -18,9 +21,9 @@ class StripeController extends Controller
                 'price_data' => [
                     'currency' => 'usd',
                     'product_data' => [
-                        'name' => 'Demo Product',
+                        'name' => "Bizzy Premium – $plan Plan",
                     ],
-                    'unit_amount' => 1000, // 1000 cents = $10
+                    'unit_amount' => $amount,
                 ],
                 'quantity' => 1,
             ]],
